@@ -42,13 +42,47 @@
             color: #555;
         }
 
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
+        .grade-buttons, .color-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .grade-btn {
+            border: 2px solid #007bff;
+            background-color: white;
+            color: #007bff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .grade-btn.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .color-btn {
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .color-btn.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         button {
@@ -61,6 +95,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-top: 20px;
         }
 
         button:hover {
@@ -85,6 +120,10 @@
             color: #333;
         }
 
+        .color-indicator span {
+            display: inline-block;
+        }
+
         .delete-btn {
             background-color: #dc3545;
             border: none;
@@ -92,6 +131,7 @@
             padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .delete-btn:hover {
@@ -109,123 +149,158 @@
 
     <div class="container">
         <h1>Climbing Progress Tracker</h1>
+
         <div class="form-group">
             <label for="climb-date">Date of Climb:</label>
             <input type="date" id="climb-date" required>
         </div>
+
         <div class="form-group">
-            <label for="climb-grade">Grade:</label>
-            <input type="text" id="climb-grade" placeholder="e.g., 7, 7a, 7b" required>
+            <label>Grade:</label>
+            <div class="grade-buttons" id="grade-buttons">
+                <!-- Grade buttons will be dynamically added here -->
+            </div>
         </div>
+
         <div class="form-group">
-            <label for="climb-color">Color:</label>
-            <select id="climb-color" required>
-                <option value="">Select Color</option>
-                <option value="Blue">Blue</option>
-                <option value="Red">Red</option>
-                <option value="Green">Green</option>
-                <option value="Yellow">Yellow</option>
-                <option value="Purple">Purple</option>
-                <option value="Orange">Orange</option>
-                <option value="Black">Black</option>
-                <option value="Grey">Grey</option>
-            </select>
+            <label>Color:</label>
+            <div class="color-buttons" id="color-buttons">
+                <!-- Color buttons will be dynamically added here -->
+            </div>
         </div>
+
         <button id="add-climb-btn">Log Climb</button>
 
         <div class="climb-list" id="climb-list">
             <h2>Your Climbs</h2>
-            <!-- Climb entries will appear here -->
         </div>
     </div>
 
     <script>
+        let selectedGrade = '';
+        let selectedColor = '';
+
+        // Define available grades
+        const grades = ['4-', '4', '4+', '5-', '5', '5+', '6-', '6', '6+', '7-', '7', '7+', '8-', '8', '8+', '9-', '9', '9+', '10-', '10', '10+', '11-', '11', '11+', '12-', '12'];
+        const gradeButtonsContainer = document.getElementById('grade-buttons');
+
+        grades.forEach(grade => {
+            const btn = document.createElement('button');
+            btn.className = 'grade-btn';
+            btn.textContent = grade;
+            btn.onclick = () => selectGrade(grade, btn);
+            gradeButtonsContainer.appendChild(btn);
+        });
+
+        // Define available colors
+        const colors = ['Blue', 'Red', 'Green', 'Yellow', 'Purple', 'Orange', 'Black', 'Grey'];
+        const colorButtonsContainer = document.getElementById('color-buttons');
+
+        colors.forEach(color => {
+            const btn = document.createElement('button');
+            btn.className = 'color-btn';
+            btn.style.backgroundColor = color.toLowerCase(); // Ensure valid CSS color
+            btn.title = color; // Tooltip for accessibility
+            btn.onclick = () => selectColor(color, btn);
+            colorButtonsContainer.appendChild(btn);
+        });
+
+        function selectGrade(grade, button) {
+            selectedGrade = grade;
+            // Deselect all other grade buttons
+            document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('selected'));
+            // Highlight the selected button
+            button.classList.add('selected');
+        }
+
+        function selectColor(color, button) {
+            selectedColor = color;
+            // Deselect all other color buttons
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('selected'));
+            // Highlight the selected button
+            button.classList.add('selected');
+        }
+
         // Get today's date
         function getTodayDate() {
             const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            return today.toISOString().split('T')[0];
         }
 
-        // Set today's date on load
         window.onload = function () {
             document.getElementById('climb-date').value = getTodayDate();
             renderClimbs();
         };
 
-        // Retrieve climbs from LocalStorage
         function getClimbs() {
-            const climbs = localStorage.getItem('climbs');
-            return climbs ? JSON.parse(climbs) : [];
+            return JSON.parse(localStorage.getItem('climbs')) || [];
         }
 
-        // Save climbs to LocalStorage
         function saveClimbs(climbs) {
             localStorage.setItem('climbs', JSON.stringify(climbs));
         }
 
-        // Add a new climb
         function addClimb() {
             const date = document.getElementById('climb-date').value;
-            const grade = document.getElementById('climb-grade').value.trim();
-            const color = document.getElementById('climb-color').value;
+            // const color = document.getElementById('climb-color').value; // Removed dropdown
 
-            if (!date || !grade || !color) {
+            if (!date || !selectedGrade || !selectedColor) {
                 alert('Please fill in all fields.');
                 return;
             }
 
             const climbs = getClimbs();
-            climbs.push({ date, grade, color });
+            climbs.push({ date, grade: selectedGrade, color: selectedColor });
             saveClimbs(climbs);
             renderClimbs();
-            clearForm();
+
+            // Reset form fields
+            selectedGrade = '';
+            selectedColor = '';
+            document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('climb-date').value = getTodayDate();
         }
 
-        // Function to clear the form inputs
-        function clearForm() {
-            document.getElementById('climb-date').value = getTodayDate(); // Reset to today's date
-            document.getElementById('climb-grade').value = '';
-            document.getElementById('climb-color').value = '';
-        }
-
-        // Render climb list
         function renderClimbs() {
             const climbList = document.getElementById('climb-list');
             climbList.innerHTML = '<h2>Your Climbs</h2>';
-            const climbs = getClimbs();
+            let climbs = getClimbs();
 
             if (climbs.length === 0) {
                 climbList.innerHTML += '<p class="no-climbs">No climbs logged yet.</p>';
                 return;
             }
 
+            // Reverse the climbs array to show the latest climbs first
+            climbs = climbs.slice().reverse();
+
             climbs.forEach((climb, index) => {
                 const climbItem = document.createElement('div');
                 climbItem.className = 'climb-item';
-
                 climbItem.innerHTML = `
                     <div class="climb-details">
-                        <strong>${climb.date}</strong> | Grade: ${climb.grade} | Color: ${climb.color}
+                        <strong>${climb.date}</strong> ${climb.grade} 
+                        <span class="color-indicator" style="display: inline-flex; align-items: center;">
+                            <span style="width: 12px; height: 12px; background-color: ${climb.color.toLowerCase()}; border-radius: 50%; display: inline-block; margin-right: 6px;"></span>
+                        </span>
                     </div>
-                    <button class="delete-btn" onclick="deleteClimb(${index})">Delete</button>
+                    <button class="delete-btn" onclick="deleteClimb(${climbs.length - 1 - index})">Delete</button>
                 `;
-
                 climbList.appendChild(climbItem);
             });
         }
 
-        // Delete climb
         function deleteClimb(index) {
-            const climbs = getClimbs();
-            climbs.splice(index, 1);
-            saveClimbs(climbs);
-            renderClimbs();
+            if (confirm('Are you sure you want to delete this climb?')) {
+                const climbs = getClimbs();
+                const actualIndex = climbs.length - 1 - index; // Adjust index for the original array
+                climbs.splice(actualIndex, 1); // Remove the climb at the adjusted index
+                saveClimbs(climbs); // Update local storage
+                renderClimbs(); // Re-render the climb list
+            }
         }
 
-        // Add climb event listener
         document.getElementById('add-climb-btn').addEventListener('click', addClimb);
     </script>
 
