@@ -2,58 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Climbing Progress Tracker - MVP Prototype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climbing Progress Tracker</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 90%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 20px;
         }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
             color: #555;
-            margin-bottom: 5px;
         }
 
-        input[type="date"],
-        input[type="text"],
-        select {
+        input, select {
             width: 100%;
-            padding: 8px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             box-sizing: border-box;
+            font-size: 14px;
         }
 
         button {
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 15px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
-            border-radius: 3px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
 
         .climb-list {
@@ -64,22 +75,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fafafa;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
 
         .climb-details {
-            flex-grow: 1;
+            color: #333;
         }
 
         .delete-btn {
             background-color: #dc3545;
             border: none;
             color: white;
-            padding: 5px 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            border-radius: 3px;
         }
 
         .delete-btn:hover {
@@ -95,8 +107,8 @@
 </head>
 <body>
 
-    <h1>Climbing Progress Tracker</h1>
     <div class="container">
+        <h1>Climbing Progress Tracker</h1>
         <div class="form-group">
             <label for="climb-date">Date of Climb:</label>
             <input type="date" id="climb-date" required>
@@ -117,7 +129,6 @@
                 <option value="Orange">Orange</option>
                 <option value="Black">Black</option>
                 <option value="Grey">Grey</option>
-                <!-- Add more colors as needed -->
             </select>
         </div>
         <button id="add-climb-btn">Log Climb</button>
@@ -129,21 +140,34 @@
     </div>
 
     <script>
-        // Function to get climbs from LocalStorage
+        // Get today's date
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Set today's date on load
+        window.onload = function () {
+            document.getElementById('climb-date').value = getTodayDate();
+            renderClimbs();
+        };
+
+        // Retrieve climbs from LocalStorage
         function getClimbs() {
             const climbs = localStorage.getItem('climbs');
             return climbs ? JSON.parse(climbs) : [];
         }
 
-        // Function to save climbs to LocalStorage
+        // Save climbs to LocalStorage
         function saveClimbs(climbs) {
             localStorage.setItem('climbs', JSON.stringify(climbs));
         }
 
-        // Function to add a new climb
-        function addClimb(event) {
-            event.preventDefault();
-
+        // Add a new climb
+        function addClimb() {
             const date = document.getElementById('climb-date').value;
             const grade = document.getElementById('climb-grade').value.trim();
             const color = document.getElementById('climb-color').value;
@@ -167,15 +191,7 @@
             document.getElementById('climb-color').value = '';
         }
 
-        // Function to delete a climb
-        function deleteClimb(index) {
-            const climbs = getClimbs();
-            climbs.splice(index, 1);
-            saveClimbs(climbs);
-            renderClimbs();
-        }
-
-        // Function to render the climbs list
+        // Render climb list
         function renderClimbs() {
             const climbList = document.getElementById('climb-list');
             climbList.innerHTML = '<h2>Your Climbs</h2>';
@@ -190,36 +206,27 @@
                 const climbItem = document.createElement('div');
                 climbItem.className = 'climb-item';
 
-                const climbDetails = document.createElement('div');
-                climbDetails.className = 'climb-details';
-                climbDetails.innerHTML = `<strong>${climb.date}</strong> | Grade: ${climb.grade} | Color: ${climb.color}`;
+                climbItem.innerHTML = `
+                    <div class="climb-details">
+                        <strong>${climb.date}</strong> | Grade: ${climb.grade} | Color: ${climb.color}
+                    </div>
+                    <button class="delete-btn" onclick="deleteClimb(${index})">Delete</button>
+                `;
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.onclick = () => deleteClimb(index);
-
-                climbItem.appendChild(climbDetails);
-                climbItem.appendChild(deleteBtn);
                 climbList.appendChild(climbItem);
             });
         }
 
-        // Function to get today's date in YYYY-MM-DD format
-        function getTodayDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+        // Delete climb
+        function deleteClimb(index) {
+            const climbs = getClimbs();
+            climbs.splice(index, 1);
+            saveClimbs(climbs);
+            renderClimbs();
         }
 
-        // Initialize the app
+        // Add climb event listener
         document.getElementById('add-climb-btn').addEventListener('click', addClimb);
-        window.onload = function() {
-            renderClimbs();
-            document.getElementById('climb-date').value = getTodayDate(); // Set date to today on load
-        };
     </script>
 
 </body>
