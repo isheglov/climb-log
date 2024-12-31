@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Climbing Progress Tracker - MVP Prototype</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .climb-list {
+            margin-top: 30px;
+        }
+
+        .climb-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .climb-details {
+            flex-grow: 1;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 5px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .no-climbs {
+            text-align: center;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Climbing Progress Tracker</h1>
+    <div class="container">
+        <div class="form-group">
+            <label for="climb-date">Date of Climb:</label>
+            <input type="date" id="climb-date" required>
+        </div>
+        <div class="form-group">
+            <label for="climb-grade">Grade:</label>
+            <input type="text" id="climb-grade" placeholder="e.g., 7, 7a, 7b" required>
+        </div>
+        <div class="form-group">
+            <label for="climb-color">Color:</label>
+            <select id="climb-color" required>
+                <option value="">Select Color</option>
+                <option value="Blue">Blue</option>
+                <option value="Red">Red</option>
+                <option value="Green">Green</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Purple">Purple</option>
+                <option value="Orange">Orange</option>
+                <option value="Black">Black</option>
+                <option value="Grey">Grey</option>
+                <!-- Add more colors as needed -->
+            </select>
+        </div>
+        <button id="add-climb-btn">Log Climb</button>
+
+        <div class="climb-list" id="climb-list">
+            <h2>Your Climbs</h2>
+            <!-- Climb entries will appear here -->
+        </div>
+    </div>
+
+    <script>
+        // Function to get climbs from LocalStorage
+        function getClimbs() {
+            const climbs = localStorage.getItem('climbs');
+            return climbs ? JSON.parse(climbs) : [];
+        }
+
+        // Function to save climbs to LocalStorage
+        function saveClimbs(climbs) {
+            localStorage.setItem('climbs', JSON.stringify(climbs));
+        }
+
+        // Function to add a new climb
+        function addClimb(event) {
+            event.preventDefault();
+
+            const date = document.getElementById('climb-date').value;
+            const grade = document.getElementById('climb-grade').value.trim();
+            const color = document.getElementById('climb-color').value;
+
+            if (!date || !grade || !color) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const climbs = getClimbs();
+            climbs.push({ date, grade, color });
+            saveClimbs(climbs);
+            renderClimbs();
+            clearForm();
+        }
+
+        // Function to clear the form inputs
+        function clearForm() {
+            document.getElementById('climb-date').value = getTodayDate(); // Reset to today's date
+            document.getElementById('climb-grade').value = '';
+            document.getElementById('climb-color').value = '';
+        }
+
+        // Function to delete a climb
+        function deleteClimb(index) {
+            const climbs = getClimbs();
+            climbs.splice(index, 1);
+            saveClimbs(climbs);
+            renderClimbs();
+        }
+
+        // Function to render the climbs list
+        function renderClimbs() {
+            const climbList = document.getElementById('climb-list');
+            climbList.innerHTML = '<h2>Your Climbs</h2>';
+            const climbs = getClimbs();
+
+            if (climbs.length === 0) {
+                climbList.innerHTML += '<p class="no-climbs">No climbs logged yet.</p>';
+                return;
+            }
+
+            climbs.forEach((climb, index) => {
+                const climbItem = document.createElement('div');
+                climbItem.className = 'climb-item';
+
+                const climbDetails = document.createElement('div');
+                climbDetails.className = 'climb-details';
+                climbDetails.innerHTML = `<strong>${climb.date}</strong> | Grade: ${climb.grade} | Color: ${climb.color}`;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteClimb(index);
+
+                climbItem.appendChild(climbDetails);
+                climbItem.appendChild(deleteBtn);
+                climbList.appendChild(climbItem);
+            });
+        }
+
+        // Function to get today's date in YYYY-MM-DD format
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Initialize the app
+        document.getElementById('add-climb-btn').addEventListener('click', addClimb);
+        window.onload = function() {
+            renderClimbs();
+            document.getElementById('climb-date').value = getTodayDate(); // Set date to today on load
+        };
+    </script>
+
+</body>
+</html>
