@@ -23,16 +23,21 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh; /* Limits container height to 90% of viewport height */
         }
 
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
+            flex-shrink: 0; /* Prevent header from shrinking */
         }
 
         .form-group {
             margin-bottom: 20px;
+            flex-shrink: 0; /* Prevent form group from shrinking */
         }
 
         label {
@@ -52,12 +57,12 @@
         }
 
         /* Hide scrollbar for WebKit browsers */
-        .grade-buttons::-webkit-scrollbar {
+        .grade-buttons::-webkit-scrollbar, .color-buttons::-webkit-scrollbar {
             display: none;
         }
 
         /* Hide scrollbar for IE, Edge, and Firefox */
-        .grade-buttons {
+        .grade-buttons, .color-buttons {
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
         }
@@ -92,6 +97,7 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             outline: none;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
         }
 
         .color-btn.selected {
@@ -110,6 +116,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
             margin-top: 20px;
+            flex-shrink: 0; /* Prevent button from shrinking */
         }
 
         button:hover {
@@ -118,6 +125,8 @@
 
         .climb-list {
             margin-top: 30px;
+            flex-grow: 1; /* Allow climb list to expand */
+            overflow-y: auto; /* Enable vertical scrolling */
         }
 
         .climb-item {
