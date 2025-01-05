@@ -1,0 +1,176 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #487ac6;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    max-width: 400px;
+    width: 90%;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Limits container height to 90% of viewport height */
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.form-group {
+    margin-bottom: 20px;
+    flex-shrink: 0; /* Prevent form group from shrinking */
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.grade-buttons, .color-buttons {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    gap: 10px;
+    justify-content: flex-start; /* Align to start */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding-bottom: 10px; /* Optional padding */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.grade-buttons::-webkit-scrollbar, .color-buttons::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.grade-buttons, .color-buttons {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.grade-btn {
+    border: 2px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, color 0.3s;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.grade-btn.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.color-btn {
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    outline: none;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.color-btn.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.climb-list {
+    margin-top: 30px;
+    flex-grow: 1; /* Allow climb list to expand */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.climb-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.climb-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.climb-details .grade-btn {
+    cursor: default;
+    min-width: 50px;
+    outline: none;  /* Remove the outline */
+    border: none;   /* Remove any border */
+}
+
+.climb-details .grade-btn:focus {
+    outline: none;  /* Remove outline on focus */
+}
+
+.color-indicator span {
+    display: inline-block;
+}
+
+.delete-btn {
+    padding: 4px 8px;
+    font-size: 0.8em;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: auto;    /* Override the default 100% width from button styles */
+    min-width: 60px; /* Set a minimum width to keep it consistent */
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.no-climbs {
+    text-align: center;
+    color: #777;
+    margin-top: 20px;
+}
