@@ -70,7 +70,12 @@ function addClimb() {
     }
 
     const climbs = getClimbs();
-    climbs.unshift({ date, grade: selectedGrade, color: selectedColor }); // Add to the beginning
+    const climb = {
+        grade: selectedGrade,
+        color: selectedColor,
+        date: new Date().toISOString()
+    };
+    climbs.unshift(climb); // Add to the beginning
     saveClimbs(climbs);
     renderClimbs();
 
@@ -84,15 +89,21 @@ function addClimb() {
 
 function renderClimbs() {
     const climbList = document.getElementById('climb-list');
-    climbList.innerHTML = '<h2>Your Climbs today</h2>';
+    climbList.innerHTML = '<h2>Your Climbs Today</h2>';
     const climbs = getClimbs();
+    
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Filter for today's climbs only
+    const todayClimbs = climbs.filter(climb => climb.date.split('T')[0] === today);
 
-    if (climbs.length === 0) {
-        climbList.innerHTML += '<p class="no-climbs">No climbs logged yet.</p>';
+    if (todayClimbs.length === 0) {
+        climbList.innerHTML += '<p class="no-climbs">No climbs logged yet today.</p>';
         return;
     }
 
-    climbs.forEach((climb, index) => {
+    todayClimbs.forEach((climb, index) => {
         // Calculate text color based on background color
         const textColor = shouldUseWhiteText(climb.color) ? 'white' : 'black';
         
@@ -147,3 +158,62 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, true); // Use capture phase to handle clicks before other listeners
 });
+
+function loadClimbs() {
+    const climbList = document.querySelector('.climb-list');
+    const climbs = JSON.parse(localStorage.getItem('climbs') || '[]');
+    
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Filter for today's climbs only
+    const todayClimbs = climbs.filter(climb => climb.date.split('T')[0] === today);
+
+    climbList.innerHTML = '';
+
+    if (todayClimbs.length === 0) {
+        const noClimbsMessage = document.createElement('p');
+        noClimbsMessage.className = 'no-climbs';
+        noClimbsMessage.textContent = 'No climbs logged today';
+        climbList.appendChild(noClimbsMessage);
+        return;
+    }
+
+    todayClimbs.forEach(climb => {
+        const climbItem = document.createElement('div');
+        climbItem.className = 'climb-item';
+
+        const details = document.createElement('div');
+        details.className = 'climb-details';
+
+        const gradeBtn = document.createElement('button');
+        gradeBtn.className = 'grade-btn';
+        gradeBtn.textContent = climb.grade;
+        gradeBtn.style.backgroundColor = '#007bff';
+        gradeBtn.style.color = 'white';
+
+        const colorIndicator = document.createElement('div');
+        colorIndicator.className = 'color-indicator';
+        const colorSpan = document.createElement('span');
+        colorSpan.style.width = '20px';
+        colorSpan.style.height = '20px';
+        colorSpan.style.backgroundColor = climb.color;
+        colorSpan.style.borderRadius = '50%';
+        colorSpan.style.display = 'inline-block';
+        if (climb.color.toLowerCase() === 'white') {
+            colorSpan.style.border = '1px solid #ccc';
+        }
+        colorIndicator.appendChild(colorSpan);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = () => deleteClimb(climb);
+
+        details.appendChild(gradeBtn);
+        details.appendChild(colorIndicator);
+        climbItem.appendChild(details);
+        climbItem.appendChild(deleteBtn);
+        climbList.appendChild(climbItem);
+    });
+}
