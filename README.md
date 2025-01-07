@@ -29,7 +29,7 @@ A simple, lightweight web application that allows climbers to log and track thei
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/climb-log.git
+git clone https://github.com/isheglov/climb-log.git
 ```
 
 2. Open `index.html` in your web browser
