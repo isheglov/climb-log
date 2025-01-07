@@ -174,3 +174,64 @@ button:hover {
     color: #777;
     margin-top: 20px;
 }
+
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+.menu-icon {
+    cursor: pointer;
+    padding: 10px;
+}
+
+.bar {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 5px 0;
+    transition: 0.4s;
+}
+
+.menu-items {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.menu-items.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-items a {
+    color: #333;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+
+.menu-items a:hover {
+    background-color: #f0f0f0;
+}
+
+.date-group {
+    margin-bottom: 2rem;
+}
+
+.date-group h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.climbs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}

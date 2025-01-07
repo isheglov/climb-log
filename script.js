@@ -126,3 +126,24 @@ function shouldUseWhiteText(backgroundColor) {
     const darkColors = ['Blue', 'Red', 'Green', 'Purple', 'Black', 'Grey'];
     return darkColors.includes(backgroundColor);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuItems = document.getElementById('menu-items');
+
+    menuToggle.addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent the click from bubbling to document
+        menuItems.classList.toggle('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        // Only handle clicks when menu is active
+        if (menuItems.classList.contains('active')) {
+            // Check if click is outside both menu toggle and menu items
+            if (!menuToggle.contains(event.target) && !menuItems.contains(event.target)) {
+                menuItems.classList.remove('active');
+            }
+        }
+    }, true); // Use capture phase to handle clicks before other listeners
+});
