@@ -1,237 +1,231 @@
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #487ac6;
+/* Global Reset */
+* {
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.container {
-    max-width: 400px;
-    width: 90%;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    max-height: 90vh; /* Limits container height to 90% of viewport height */
-}
-
-h1 {
-    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  /* Body & Font */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Off-white background */
     color: #333;
-    margin-bottom: 20px;
-    flex-shrink: 0; /* Prevent header from shrinking */
-}
-
-.form-group {
-    margin-bottom: 20px;
-    flex-shrink: 0; /* Prevent form group from shrinking */
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #555;
-}
-
-.grade-buttons, .color-buttons {
-    display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping */
-    gap: 10px;
-    justify-content: flex-start; /* Align to start */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    padding-bottom: 10px; /* Optional padding */
-}
-
-/* Hide scrollbar for WebKit browsers */
-.grade-buttons::-webkit-scrollbar, .color-buttons::-webkit-scrollbar {
-    display: none;
-}
-
-/* Hide scrollbar for IE, Edge, and Firefox */
-.grade-buttons, .color-buttons {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-.grade-btn {
-    border: 2px solid #007bff;
-    background-color: white;
-    color: #007bff;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s, color 0.3s;
-    flex-shrink: 0; /* Prevent buttons from shrinking */
-}
-
-.grade-btn.selected {
-    background-color: #007bff;
-    color: white;
-}
-
-.color-btn {
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    outline: none;
-    flex-shrink: 0; /* Prevent buttons from shrinking */
-}
-
-.color-btn.selected {
-    transform: scale(1.1);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 15px;
-    width: 100%;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
-    flex-shrink: 0; /* Prevent button from shrinking */
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-.climb-list {
-    margin-top: 30px;
-    flex-grow: 1; /* Allow climb list to expand */
-    overflow-y: auto; /* Enable vertical scrolling */
-}
-
-.climb-item {
+  }
+  
+  /* Navigation Header */
+  .nav-menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f9f9f9;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.climb-details {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.climb-details .grade-btn {
-    cursor: default;
-    min-width: 50px;
-    outline: none;  /* Remove the outline */
-    border: none;   /* Remove any border */
-}
-
-.climb-details .grade-btn:focus {
-    outline: none;  /* Remove outline on focus */
-}
-
-.color-indicator span {
-    display: inline-block;
-}
-
-.delete-btn {
-    padding: 4px 8px;
-    font-size: 0.8em;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: auto;    /* Override the default 100% width from button styles */
-    min-width: 60px; /* Set a minimum width to keep it consistent */
-}
-
-.delete-btn:hover {
-    background-color: #c82333;
-}
-
-.no-climbs {
-    text-align: center;
-    color: #777;
-    margin-top: 20px;
-}
-
-.nav-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
+    background: #3f51b5; /* A purple-blue color */
     padding: 1rem;
-    z-index: 1000;
-}
-
-.menu-icon {
-    cursor: pointer;
-    padding: 10px;
-}
-
-.bar {
-    width: 25px;
-    height: 3px;
-    background-color: #333;
-    margin: 5px 0;
-    transition: 0.4s;
-}
-
-.menu-items {
-    display: none;
-    position: absolute;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    padding: 1rem;
-    border-radius: 4px;
-}
-
-.menu-items.active {
+    position: relative;
+  }
+  
+  /* Hamburger icon */
+  .menu-icon {
     display: flex;
     flex-direction: column;
-}
-
-.menu-items a {
-    color: #333;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-}
-
-.menu-items a:hover {
-    background-color: #f0f0f0;
-}
-
-.date-group {
-    margin-bottom: 2rem;
-}
-
-.date-group h2 {
-    margin-bottom: 1rem;
-    color: #333;
-    font-size: 1.2rem;
-}
-
-.climbs-container {
+    cursor: pointer;
+  }
+  
+  .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 4px 0;
+    transition: 0.3s;
+  }
+  
+  /* Menu Items */
+  .menu-items {
     display: flex;
-    flex-wrap: wrap;
     gap: 1rem;
+  }
+  
+  .menu-items a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  /* Responsive Nav - Hide by default on mobile */
+  @media (max-width: 768px) {
+    .menu-items {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: #3f51b5;
+      flex-direction: column;
+      width: 150px;
+      padding: 1rem;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+  
+    .menu-items.show {
+      transform: translateX(0);
+    }
+  }
+  
+  /* Container */
+  .container {
+    max-width: 600px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+    text-align: center;
+  }
+  
+  /* Card */
+  .card {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-group input[type="date"] {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Grade & Color Buttons */
+  .grade-buttons,
+  .color-buttons {
+    display: flex;
+    flex-wrap: nowrap;       /* force a single row */
+    gap: 0.5rem;
+    overflow-x: auto;        /* enable horizontal scroll */
+    padding-bottom: 10px;    /* optional spacing for visual comfort */
+  }
+  
+  .grade-buttons button,
+  .color-buttons button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  .grade-buttons button:hover {
+    background-color: #ececec;
+  }
+  
+  /* For color buttons as circles */
+  .color-buttons button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 0; /* Hide text if any */
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  /* Hide scrollbar for WebKit browsers */
+.grade-buttons::-webkit-scrollbar,
+.color-buttons::-webkit-scrollbar {
+  display: none;
 }
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.grade-buttons,
+.color-buttons {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+  
+  /* Log Climb Button */
+  .log-climb-btn {
+    display: inline-block;
+    background-color: #1976d2; /* Another shade of blue */
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s;
+  }
+  
+  .log-climb-btn:hover {
+    background-color: #1565c0;
+  }
+  
+  /* Climb List */
+  .climb-list {
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+  
+  .climb-list h2 {
+    margin-bottom: 1rem;
+  }
+  
+  /* Individual Climb Items */
+  .climb-item {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    margin: 0.5rem 0;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .climb-details {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .grade-badge {
+    display: inline-block;
+    width: 40px;          /* Fixed width for a perfect circle */
+    height: 40px;         /* Same height as width */
+    background-color: #2196f3; 
+    color: #fff;
+    font-weight: bold;
+    border-radius: 50%;   /* The key to a circle */
+    text-align: center;
+    line-height: 40px;    /* Vertically center text */
+    font-size: 1rem;      /* Adjust as you like */
+  }
+  
+  .color-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  
+  .delete-btn {
+    background-color: #f44336;
+    border: none;
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .delete-btn:hover {
+    background-color: #d32f2f;
+  }

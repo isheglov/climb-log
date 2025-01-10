@@ -1,54 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climb Log</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climb Log</title>
+  <!-- Updated Favicon -->
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+  <!-- Updated CSS -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="nav-menu">
-        <div class="menu-icon" id="menu-toggle">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-        <div class="menu-items" id="menu-items">
-            <a href="index.html">Today's Log</a>
-            <a href="full-log.html">Full History</a>
-        </div>
-    </nav>
+  <!-- Header / Nav -->
+  <nav class="nav-menu">
+    <div class="menu-icon" id="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="menu-items" id="menu-items">
+      <a href="index.html">Today’s Log</a>
+      <a href="full-log.html">Full History</a>
+    </div>
+  </nav>
 
-    <div class="container">
-        <h1>Climb Log</h1>
+  <!-- Main Container -->
+  <div class="container">
+    <h1>Climb Log</h1>
 
-        <div class="form-group">
-            <label for="climb-date">Date of Climb:</label>
-            <input type="date" id="climb-date" required>
+    <!-- Card Section for Inputs -->
+    <div class="card">
+      <div class="form-group">
+        <label for="climb-date">Date of Climb:</label>
+        <input type="date" id="climb-date" required>
+      </div>
+
+      <div class="form-group">
+        <label>Grade:</label>
+        <div class="grade-buttons" id="grade-buttons">
+          <!-- Grade buttons dynamically added by JS -->
         </div>
+      </div>
 
-        <div class="form-group">
-            <label>Grade:</label>
-            <div class="grade-buttons" id="grade-buttons">
-                <!-- Grade buttons will be dynamically added here -->
-            </div>
+      <div class="form-group">
+        <label>Color:</label>
+        <div class="color-buttons" id="color-buttons">
+          <!-- Color buttons dynamically added by JS -->
         </div>
+      </div>
 
-        <div class="form-group">
-            <label>Color:</label>
-            <div class="color-buttons" id="color-buttons">
-                <!-- Color buttons will be dynamically added here -->
-            </div>
-        </div>
-
-        <button id="add-climb-btn">Log Climb</button>
-
-        <div class="climb-list" id="climb-list">
-            <h2>Your Climbs today</h2>
-        </div>
+      <button id="add-climb-btn" class="log-climb-btn">Log Climb</button>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Climb List Section -->
+    <div class="climb-list" id="climb-list">
+      <h2>Your Climbs Today</h2>
+      <!-- Dynamically populated list of climbs -->
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
 </body>
 </html>

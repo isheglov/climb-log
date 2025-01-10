@@ -111,9 +111,9 @@ function renderClimbs() {
         climbItem.className = 'climb-item';
         climbItem.innerHTML = `
             <div class="climb-details">
-                <button class="grade-btn" style="background-color: ${climb.color.toLowerCase()}; color: ${textColor};">
+                <div class="grade-badge" style="background-color: ${climb.color.toLowerCase()}; color: ${textColor};">
                     ${climb.grade}
-                </button>
+                </div>
                 <button class="delete-btn" onclick="deleteClimb(${index})">Delete</button>
             </div>
         `;
@@ -146,6 +146,10 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation(); // Prevent the click from bubbling to document
         menuItems.classList.toggle('active');
     });
+
+    menuToggle.addEventListener("click", () => {
+        menuItems.classList.toggle("show");
+      });
 
     // Close menu when clicking outside
     document.addEventListener('click', function(event) {
@@ -186,11 +190,11 @@ function loadClimbs() {
         const details = document.createElement('div');
         details.className = 'climb-details';
 
-        const gradeBtn = document.createElement('button');
-        gradeBtn.className = 'grade-btn';
-        gradeBtn.textContent = climb.grade;
-        gradeBtn.style.backgroundColor = '#007bff';
-        gradeBtn.style.color = 'white';
+        const gradeDiv = document.createElement('div');
+        gradeDiv.className = 'grade-badge';
+        gradeDiv.textContent = climb.grade;
+        gradeDiv.style.backgroundColor = '#007bff';
+        gradeDiv.style.color = 'white';
 
         const colorIndicator = document.createElement('div');
         colorIndicator.className = 'color-indicator';
@@ -210,7 +214,7 @@ function loadClimbs() {
         deleteBtn.textContent = 'Delete';
         deleteBtn.onclick = () => deleteClimb(climb);
 
-        details.appendChild(gradeBtn);
+        details.appendChild(gradeDiv);
         details.appendChild(colorIndicator);
         climbItem.appendChild(details);
         climbItem.appendChild(deleteBtn);
