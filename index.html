@@ -8,20 +8,16 @@
   <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
   <!-- Updated CSS -->
   <link rel="stylesheet" href="styles.css">
+  <!-- Font Awesome (CDN Link) -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" 
+  />
 </head>
 <body>
-  <!-- Header / Nav -->
-  <nav class="nav-menu">
-    <div class="menu-icon" id="menu-toggle">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-    </div>
-    <div class="menu-items" id="menu-items">
-      <a href="index.html">Today’s Log</a>
-      <a href="full-log.html">Full History</a>
-    </div>
-  </nav>
+
 
   <!-- Main Container -->
   <div class="container">
@@ -57,6 +53,16 @@
       <!-- Dynamically populated list of climbs -->
     </div>
   </div>
+
+  <!-- Bottom Navigation Tabs -->
+<nav class="bottom-nav">
+    <a href="index.html" class="tab-link">
+        <i class="fa fa-home"></i>
+      </a>
+      <a href="full-log.html" class="tab-link">
+        <i class="fa fa-list-alt"></i>
+      </a>
+  </nav>
 
   <!-- Script -->
   <script src="script.js"></script>
