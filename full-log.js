@@ -1,19 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Menu toggle functionality
-    const menuToggle = document.getElementById('menu-toggle');
-    const menuItems = document.getElementById('menu-items');
-
-    menuToggle.addEventListener('click', function() {
-        menuItems.classList.toggle('active');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!menuToggle.contains(event.target) && !menuItems.contains(event.target)) {
-            menuItems.classList.remove('active');
-        }
-    });
-
     // Load and display climbs grouped by date
     const fullClimbList = document.getElementById('full-climb-list');
     const climbs = JSON.parse(localStorage.getItem('climbs') || '[]');
