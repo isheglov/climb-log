@@ -13,11 +13,19 @@
         crossorigin="anonymous" 
         referrerpolicy="no-referrer" 
         />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 <body>
 
     <div class="container">
-        <h1>Climbing History</h1>
+        <h1>Progress</h1>
+        
+        <!-- Add a canvas for the graph -->
+        <div class="graph-container">
+            <canvas id="climbingGraph"></canvas>
+        </div>
+        
         <div class="full-climb-list" id="full-climb-list">
             <!-- Climbs will be dynamically added here, grouped by date -->
         </div>
@@ -38,7 +46,7 @@
         <i class="fa fa-robot"></i>
       </a>
     </nav>
-
-    <script src="full-log.js"></script>
+    
+    <script src="progress.js"></script>
 </body>
 </html> 
