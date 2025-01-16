@@ -71,6 +71,7 @@ function addClimb() {
 
     const climbs = getClimbs();
     const climb = {
+        uuid: crypto.randomUUID(), // Add UUID to climb
         grade: selectedGrade,
         color: selectedColor,
         date: new Date().toISOString()

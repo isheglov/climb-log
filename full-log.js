@@ -32,13 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const climbElement = document.createElement('div');
                 climbElement.className = 'climb-card';
                 
-                const gradeElement = document.createElement('div');
-                gradeElement.className = 'grade';
+                // Create grade container with circular style matching index page
+                const gradeContainer = document.createElement('div');
+                gradeContainer.className = 'grade-container circular-grade';
+                
+                const gradeElement = document.createElement('span');
+                gradeElement.className = 'grade-text';
                 gradeElement.textContent = climb.grade;
                 
-                const colorDot = document.createElement('div');
-                colorDot.className = 'color-dot';
-                // Convert color name to actual color if needed
+                // Use the grade container itself as the colored circle instead of a separate badge
                 const colorMap = {
                     'yellow': '#FFD700',
                     'green': '#32CD32',
@@ -50,13 +52,47 @@ document.addEventListener('DOMContentLoaded', function() {
                     'pink': '#FF69B4',
                     'white': '#FFFFFF'
                 };
-                colorDot.style.backgroundColor = colorMap[climb.color.toLowerCase()] || climb.color;
+                gradeContainer.style.backgroundColor = colorMap[climb.color.toLowerCase()] || climb.color;
                 if (climb.color.toLowerCase() === 'white') {
-                    colorDot.style.border = '1px solid #ccc';
+                    gradeContainer.style.border = '1px solid #ccc';
                 }
 
-                climbElement.appendChild(gradeElement);
-                climbElement.appendChild(colorDot);
+                gradeContainer.appendChild(gradeElement);
+                climbElement.appendChild(gradeContainer);
+                
+                // Add delete button if needed
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-btn';
+                deleteButton.textContent = 'Delete';
+                
+                // Add delete functionality using UUID, matching index page style
+                deleteButton.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to delete this climb?')) {
+                        try {
+                            const storedClimbs = JSON.parse(localStorage.getItem('climbs') || '[]');
+                            const updatedClimbs = storedClimbs.filter(storedClimb => 
+                                storedClimb.uuid !== climb.uuid
+                            );
+                            
+                            localStorage.setItem('climbs', JSON.stringify(updatedClimbs));
+                            
+                            // Remove the climb element from the DOM
+                            climbElement.remove();
+                            
+                            // If this was the last climb for this date, remove the date header
+                            const remainingClimbsForDate = climbsContainer.children.length;
+                            if (remainingClimbsForDate === 0) {
+                                dateGroup.remove();
+                            }
+                            
+                        } catch (error) {
+                            console.error('Error deleting climb:', error);
+                            alert('Failed to delete climb. Please try again.');
+                        }
+                    }
+                });
+                
+                climbElement.appendChild(deleteButton);
                 climbsContainer.appendChild(climbElement);
             });
 

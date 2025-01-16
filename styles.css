@@ -12,62 +12,6 @@
     color: #333;
   }
   
-  /* Navigation Header */
-  .nav-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #3f51b5; /* A purple-blue color */
-    padding: 1rem;
-    position: relative;
-  }
-  
-  /* Hamburger icon */
-  .menu-icon {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-  }
-  
-  .bar {
-    width: 25px;
-    height: 3px;
-    background-color: #fff;
-    margin: 4px 0;
-    transition: 0.3s;
-  }
-  
-  /* Menu Items */
-  .menu-items {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .menu-items a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  /* Responsive Nav - Hide by default on mobile */
-  @media (max-width: 768px) {
-    .menu-items {
-      position: absolute;
-      top: 60px;
-      right: 0;
-      background-color: #3f51b5;
-      flex-direction: column;
-      width: 150px;
-      padding: 1rem;
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
-    }
-  
-    .menu-items.show {
-      transform: translateX(0);
-    }
-  }
-  
   /* Container */
   .container {
     max-width: 600px;
@@ -208,12 +152,6 @@
     text-align: center;
     line-height: 40px;    /* Vertically center text */
     font-size: 1rem;      /* Adjust as you like */
-  }
-  
-  .color-circle {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
   }
   
   .delete-btn {
@@ -386,3 +324,24 @@
     background-color: #45a049;
   }
   
+  .circular-grade {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+}
+
+.grade-text {
+    color: white;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.climb-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0;
+}
