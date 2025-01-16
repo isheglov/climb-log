@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Climbing Trainer</title>
+    <title>Climb Log - Configuration</title>
     <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
     <link rel="stylesheet" href="styles.css">
     <link 
@@ -12,22 +12,27 @@
         crossorigin="anonymous" 
         referrerpolicy="no-referrer" 
     />
-    <script src="ai-trainer.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>AI Climbing Trainer</h1>
+        <h1>Configuration</h1>
         
-        <div class="chat-container">
-            <div class="chat-messages" id="chat-messages">
-                <!-- Messages will be added here dynamically -->
-            </div>
-            <div class="chat-input-container">
-                <input type="text" id="chat-input" placeholder="Ask your climbing question...">
-                <button id="send-button">
-                    <i class="fa fa-paper-plane"></i>
-                </button>
-            </div>
+        <div class="config-form">
+            <form id="apiKeyForm">
+                <div class="form-group">
+                    <label for="geminiKey">Gemini API Key:</label>
+                    <input 
+                        type="password" 
+                        id="geminiKey" 
+                        name="geminiKey" 
+                        placeholder="Enter your Gemini API key"
+                    >
+                    <button type="button" id="toggleKey" class="toggle-password">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </div>
+                <button type="submit" class="save-button">Save Configuration</button>
+            </form>
         </div>
     </div>
 
@@ -48,5 +53,7 @@
             <i class="fa fa-gear"></i>
         </a>
     </nav>
+
+    <script src="config.js"></script>
 </body>
 </html> 

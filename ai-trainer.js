@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chat-messages');
     const chatInput = document.getElementById('chat-input');
     const sendButton = document.getElementById('send-button');
+    
+    const API_KEY = localStorage.getItem('geminiApiKey');
+    
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
 
     // Initial welcome message
     addMessage("Hi! I'm your AI climbing trainer. I can help you with training advice, technique tips, and analyzing your climbing progress. What would you like to know?", 'ai');
@@ -16,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function sendMessage() {
+    async function sendMessage() {
         const message = chatInput.value.trim();
         if (message === '') return;
 
@@ -30,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const climbingData = getClimbingContext();
 
         // Process the message and get AI response
-        processMessage(message, climbingData);
+        await processMessage(message, climbingData);
     }
 
     function addMessage(text, sender) {
@@ -67,43 +71,54 @@ document.addEventListener('DOMContentLoaded', () => {
         addMessage('Thinking...', 'ai');
 
         try {
-            // Here you would typically make an API call to your AI service
-            // For now, we'll use some basic response logic
-            const response = await getAIResponse(message, context);
+            console.log(context);
+
+            const contextPrompt = `Context: User has completed ${context.totalClimbs} climbs. 
+                Average grade: UIAA ${context.averageGrade?.toFixed(0) || '0'}. 
+                Max grade: UIAA ${context.maxGrade || '0'}.
+                
+                User question: ${message}
+                
+                Please provide specific climbing advice based on this context.`;
+
+            console.log(contextPrompt);
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        role: "user",
+                        parts: [{
+                            text: contextPrompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 1,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 8192,
+                        responseMimeType: "text/plain"
+                    }
+                })
+            });
+
+            const data = await response.json();
+            const aiResponse = data.candidates[0].content.parts[0].text;
             
+
+            console.log(aiResponse);
+            console.log(data);
+
             // Remove typing indicator and add AI response
             chatMessages.removeChild(chatMessages.lastChild);
-            addMessage(response, 'ai');
+            addMessage(aiResponse, 'ai');
 
         } catch (error) {
+            console.error('Error:', error);
             chatMessages.removeChild(chatMessages.lastChild);
             addMessage('Sorry, I had trouble processing that request. Please try again.', 'ai');
         }
-    }
-
-    function getAIResponse(message, context) {
-        // This is a simple example - replace with actual AI integration
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const lowerMessage = message.toLowerCase();
-                
-                // Simple response logic based on keywords
-                if (lowerMessage.includes('beginner') || lowerMessage.includes('start')) {
-                    resolve("As a beginner, focus on proper technique and footwork. Start with easier routes (V0-V2) and work on maintaining balance and using your legs more than your arms. Would you like specific technique tips?");
-                }
-                else if (lowerMessage.includes('progress') || lowerMessage.includes('improve')) {
-                    const response = context.totalClimbs > 0 
-                        ? `Based on your logs, you've completed ${context.totalClimbs} climbs with an average grade of V${context.averageGrade.toFixed(1)}. To improve, try working on routes slightly above your current level and focus on specific techniques you find challenging.`
-                        : "To track your progress, start logging your climbs regularly. This will help identify patterns and areas for improvement. Would you like tips on structured training?";
-                    resolve(response);
-                }
-                else if (lowerMessage.includes('technique') || lowerMessage.includes('tips')) {
-                    resolve("Here are some key technique tips: 1) Keep your arms straight when possible to conserve energy, 2) Focus on pushing with your legs rather than pulling with your arms, 3) Try to keep your center of gravity close to the wall, 4) Look for opportunities to rest on better holds. Would you like me to elaborate on any of these?");
-                }
-                else {
-                    resolve("I can help you with climbing technique, training plans, and progress analysis. What specific aspect would you like to know more about?");
-                }
-            }, 1000);
-        });
     }
 }); 
