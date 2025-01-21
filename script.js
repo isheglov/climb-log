@@ -71,12 +71,12 @@ function addClimb() {
 
     const climbs = getClimbs();
     const climb = {
-        uuid: crypto.randomUUID(), // Add UUID to climb
+        uuid: crypto.randomUUID(),
         grade: selectedGrade,
         color: selectedColor,
-        date: new Date().toISOString()
+        date: new Date(date).toISOString()
     };
-    climbs.unshift(climb); // Add to the beginning
+    climbs.unshift(climb);
     saveClimbs(climbs);
     renderClimbs();
 
