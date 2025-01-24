@@ -165,10 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Extract focus suggestions
             const focusMatches = Array.from(aiResponse.matchAll(/Focus on:(.+)/g));
+            let extractedSuggestions = [];
             if (focusMatches.length > 0) {
-                const focusSuggestions = focusMatches.map(match => match[1].trim());
-                localStorage.setItem('focusSuggestions', JSON.stringify(focusSuggestions));
+                 extractedSuggestions = focusMatches.map(match => match[1].trim());
+                 localStorage.setItem('focusSuggestions', JSON.stringify(extractedSuggestions));
             }
+
 
             // Add AI response to history
             conversationHistory.push({
