@@ -167,8 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const focusMatches = Array.from(aiResponse.matchAll(/Focus on:(.+)/g));
             let extractedSuggestions = [];
             if (focusMatches.length > 0) {
-                 extractedSuggestions = focusMatches.map(match => match[1].trim());
-                 localStorage.setItem('focusSuggestions', JSON.stringify(extractedSuggestions));
+                extractedSuggestions = focusMatches.map(match => match[1].trim());
+                localStorage.setItem('focusSuggestions', JSON.stringify(extractedSuggestions));
             }
 
 
