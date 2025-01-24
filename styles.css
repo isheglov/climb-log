@@ -367,3 +367,21 @@
   width: 20px;
   height: 20px;
 }
+
+.focus-area {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.focus-area h2 {
+    margin-bottom: 10px;
+}
+
+#focus-tips p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
