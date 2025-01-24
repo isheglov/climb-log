@@ -164,10 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const aiResponse = data.candidates[0].content.parts[0].text;
 
             // Extract focus suggestions
-            const focusMatch = aiResponse.match(/Focus on:(.+)/s);
-            if (focusMatch) {
-                const focusText = focusMatch[1].trim();
-                localStorage.setItem('focusSuggestions', focusText);
+            const focusMatches = Array.from(aiResponse.matchAll(/Focus on:(.+)/g));
+            if (focusMatches.length > 0) {
+                const focusSuggestions = focusMatches.map(match => match[1].trim());
+                localStorage.setItem('focusSuggestions', JSON.stringify(focusSuggestions));
             }
 
             // Add AI response to history
