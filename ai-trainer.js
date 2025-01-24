@@ -163,6 +163,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             const aiResponse = data.candidates[0].content.parts[0].text;
 
+            // Extract focus suggestions
+            const focusMatch = aiResponse.match(/Focus on:(.+)/s);
+            if (focusMatch) {
+                const focusText = focusMatch[1].trim();
+                localStorage.setItem('focusSuggestions', focusText);
+            }
+
             // Add AI response to history
             conversationHistory.push({
                 role: "model",
