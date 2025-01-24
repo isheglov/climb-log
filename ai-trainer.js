@@ -163,14 +163,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             const aiResponse = data.candidates[0].content.parts[0].text;
 
-            // Extract focus suggestions
-            const focusMatches = Array.from(aiResponse.matchAll(/Focus on:(.+)/g));
-            let extractedSuggestions = [];
-            if (focusMatches.length > 0) {
-                extractedSuggestions = focusMatches.map(match => match[1].trim());
-                localStorage.setItem('focusSuggestions', JSON.stringify(extractedSuggestions));
-            }
+            // Extract focus suggestions using LLM
+            const focusSuggestion = await extractFocusSuggestionFromLLM(aiResponse);
+            if (focusSuggestion) {
+                // Get existing suggestions from localStorage
+                let existingSuggestions = JSON.parse(localStorage.getItem('focusSuggestions')) || [];
+                
+                // Add the new suggestion to the array
+                existingSuggestions.push(focusSuggestion);
 
+                // Save the updated array back to localStorage
+                localStorage.setItem('focusSuggestions', JSON.stringify(existingSuggestions));
+            }
 
             // Add AI response to history
             conversationHistory.push({
@@ -191,6 +195,62 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
             chatMessages.removeChild(chatMessages.lastChild);
             addMessage('Sorry, I had trouble processing that request. Please try again.', 'ai');
+        }
+    }
+
+    async function extractFocusSuggestionFromLLM(text) {
+        const suggestionPrompt = `Does this message contain climbing suggestion? If yes, summarize this suggestion in a short but clear form. If not, respond with empty string.
+        Message:
+        ${text}`;
+
+        console.log("Suggestion Prompt:", suggestionPrompt);
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        role: "user",
+                        parts: [{
+                            text: suggestionPrompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2, // Keep temperature low for summarization
+                        maxOutputTokens: 100, // Limit output tokens for summary
+                    }
+                })
+            });
+
+            console.log("Response Status:", response.status);
+
+            if (!response.ok) {
+                console.error('HTTP error!', response.status);
+                return null;
+            }
+
+            const data = await response.json();
+            console.log("Response Data:", data);
+            let llmSuggestion = data.candidates[0].content.parts[0].text;
+            console.log("LLM Suggestion (before trim):", llmSuggestion);
+            llmSuggestion = llmSuggestion.trim();
+            console.log("LLM Suggestion (after trim):", llmSuggestion);
+
+            // Check if the response is an empty string or indicates no suggestion
+            if (!llmSuggestion || llmSuggestion.toLowerCase().includes("no suggestion")) {
+                console.log("No suggestion found by LLM.");
+                return null; // Return null if no suggestion is found
+            }
+
+            return llmSuggestion;
+
+        } catch (error) {
+            console.error('Error extracting focus suggestion:', error);
+            console.error(error);
+            return null;
         }
     }
 }); 
