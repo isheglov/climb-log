@@ -33,4 +33,18 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please enter an API key');
         }
     });
+
+    function displayFocusSuggestions() {                                                                                                                   
+        const focusArea = document.getElementById('focus-area');                                                                                           
+        const focusSuggestions = localStorage.getItem('focusSuggestions');                                                                                 
+                                                                                                                                                           
+        if (focusSuggestions) {                                                                                                                            
+            focusArea.innerHTML = `<h2>Focus Area</h2><p>${focusSuggestions}</p>`;                                                                         
+        } else {                                                                                                                                           
+            focusArea.innerHTML = '<h2>Focus Area</h2><p>No focus suggestions yet.</p>';                                                                   
+        }                                                                                                                                                  
+    }                                                                                                                                                      
+                                                                                                                                                           
+    // Display focus suggestions on page load                                                                                                              
+    displayFocusSuggestions();  
 }); 
