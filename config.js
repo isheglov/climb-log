@@ -39,12 +39,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const focusSuggestions = localStorage.getItem('focusSuggestions');                                                                                 
                                                                                                                                                            
         if (focusSuggestions) {                                                                                                                            
-            focusArea.innerHTML = `<h2>Focus Area</h2><p>${focusSuggestions}</p>`;                                                                         
+            try {                                                                                                                                          
+                const suggestions = JSON.parse(focusSuggestions);                                                                                          
+                let list = '<h2>Focus Area</h2><ul>';                                                                                                      
+                suggestions.forEach(suggestion => {                                                                                                        
+                    list += `<li>${suggestion}</li>`;                                                                                                      
+                });                                                                                                                                        
+                list += '</ul>';                                                                                                                           
+                focusArea.innerHTML = list;                                                                                                                
+            } catch (e) {                                                                                                                                  
+                console.error("Error parsing focus suggestions:", e);                                                                                      
+                focusArea.innerHTML = '<h2>Focus Area</h2><p>Error loading focus suggestions.</p>';                                                        
+            }                                                                                                                                              
         } else {                                                                                                                                           
             focusArea.innerHTML = '<h2>Focus Area</h2><p>No focus suggestions yet.</p>';                                                                   
         }                                                                                                                                                  
     }                                                                                                                                                      
                                                                                                                                                            
     // Display focus suggestions on page load                                                                                                              
-    displayFocusSuggestions();  
+    displayFocusSuggestions(); 
 }); 

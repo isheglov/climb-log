@@ -33,7 +33,22 @@
         <div class="focus-area">
             <h2>Focus Area</h2>
             <div id="focus-tips">
-                <!-- Focus tips will be added here -->
+                <script>
+                    const focusTipsDiv = document.getElementById('focus-tips');
+                    const focusSuggestions = JSON.parse(localStorage.getItem('focusSuggestions') || '[]');
+
+                    if (focusSuggestions.length > 0) {
+                        const tipsList = document.createElement('ul');
+                        focusSuggestions.forEach(tip => {
+                            const tipItem = document.createElement('li');
+                            tipItem.textContent = tip;
+                            tipsList.appendChild(tipItem);
+                        });
+                        focusTipsDiv.appendChild(tipsList);
+                    } else {
+                        focusTipsDiv.textContent = "No focus tips available yet.";
+                    }
+                </script>
             </div>
         </div>
     </div>
