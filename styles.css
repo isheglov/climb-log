@@ -385,3 +385,12 @@
     margin-bottom: 8px;
     line-height: 1.6;
 }
+
+.contact-developer {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa; /* Light grey background */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: left;
+}
