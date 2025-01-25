@@ -8,14 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
 
-    let conversationHistory = [];
+    let conversationHistoryForLLM = [];
+    let conversationHistoryForHuman = [];
 
     // Load existing chat history from localStorage
-    const savedHistory = localStorage.getItem('chatHistory');
-    if (savedHistory) {
-        conversationHistory = JSON.parse(savedHistory);
+    const savedHistoryForLLM = localStorage.getItem('chatHistoryForLLM');
+    const savedHistoryForHumanJSON = localStorage.getItem('chatHistoryForHuman');
+    if (savedHistoryForHumanJSON) {
+        conversationHistoryForHuman = JSON.parse(savedHistoryForHumanJSON);
+        conversationHistoryForLLM = JSON.parse(savedHistoryForLLM);
         // Replay saved messages in the UI
-        conversationHistory.forEach(msg => {
+        conversationHistoryForHuman.forEach(msg => {
             if (msg.role === 'user') {
                 addMessage(msg.parts[0].text, 'user');
             } else if (msg.role === 'model') {
@@ -25,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial welcome message (only if no history)
-    if (!savedHistory) {
+    if (!savedHistoryForHumanJSON) {
         addMessage("Hi! I'm your AI climbing trainer. I can help you with training advice, technique tips, and analyzing your climbing progress. What would you like to know?", 'ai');
     }
 
@@ -45,8 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.innerHTML = '';
         
         // Clear the conversation history
-        conversationHistory = [];
-        localStorage.removeItem('chatHistory');
+        conversationHistoryForLLM = [];
+        conversationHistoryForHuman = [];
+        localStorage.removeItem('chatHistoryForLLM');
+        localStorage.removeItem('chatHistoryForHuman');
         
         // Add initial welcome message
         addMessage("Hi! I'm your AI climbing trainer. I can help you with training advice, technique tips, and analyzing your climbing progress. What would you like to know?", 'ai');
@@ -131,14 +136,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 Remember: Always prioritize clarity and brevity over lengthy explanations.`;
 
             // Add current user message to history
-            conversationHistory.push({
+            conversationHistoryForLLM.push({
                 role: "user",
                 parts: [{
                     text: contextPrompt
                 }]
             });
 
-            console.log(conversationHistory);
+            conversationHistoryForHuman.push({
+                role: "user",
+                parts: [{
+                    text: message
+                }]
+            });
+
 
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -146,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    contents: conversationHistory,
+                    contents: conversationHistoryForLLM,
                     generationConfig: {
                         temperature: 0.4,
                         topK: 40,
@@ -177,7 +188,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Add AI response to history
-            conversationHistory.push({
+            conversationHistoryForLLM.push({
+                role: "model",
+                parts: [{
+                    text: aiResponse
+                }]
+            });
+
+            conversationHistoryForHuman.push({
                 role: "model",
                 parts: [{
                     text: aiResponse
@@ -185,7 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Save updated history to localStorage
-            localStorage.setItem('chatHistory', JSON.stringify(conversationHistory));
+            localStorage.setItem('chatHistoryForLLM', JSON.stringify(conversationHistoryForLLM));
+            localStorage.setItem('chatHistoryForHuman', JSON.stringify(conversationHistoryForHuman));
 
             // Remove typing indicator and add AI response
             chatMessages.removeChild(chatMessages.lastChild);
@@ -225,19 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
 
-            console.log("Response Status:", response.status);
-
             if (!response.ok) {
                 console.error('HTTP error!', response.status);
                 return null;
             }
 
             const data = await response.json();
-            console.log("Response Data:", data);
             let llmSuggestion = data.candidates[0].content.parts[0].text;
-            console.log("LLM Suggestion (before trim):", llmSuggestion);
             llmSuggestion = llmSuggestion.trim();
-            console.log("LLM Suggestion (after trim):", llmSuggestion);
 
             // Check if the response is an empty string or indicates no suggestion
             if (!llmSuggestion || llmSuggestion.toLowerCase().includes("no suggestion")) {
